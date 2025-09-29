@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dla Ciebie ❤️</title>
+
+<!-- Czcionka z polskimi znakami -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe6e6, #ffd1dc, #fff5f5);
+    color: #800000;
+    text-align: center;
+    overflow-x: hidden;
+    transition: background 0.8s ease, color 0.8s ease;
+  }
+
+  /* Tryb ciemny */
+  .dark-mode {
+    background: linear-gradient(135deg, #2b0000, #4b0000, #000000);
+    color: #ffd6d6;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* Ekran logowania */
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1s;
+    position: relative;
+    z-index: 2; 
+  }
+
+  input {
+    padding: 10px;
+    border: 2px solid #ffb3b3;
+    border-radius: 10px;
+    outline: none;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: inherit;
+    font-size: 18px;
+  }
+
+  button {
+    background-color: #ff6666;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+    font-size: 18px;
+  }
+
+  button:hover {
+    background-color: #ff4d4d;
+  }
+
+  /* Główna część */
+  #main {
+    animation: fadeIn 1s;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  nav {
+    background: rgba(255, 204, 204, 0.8);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    background-color: #ff9999;
+  }
+
+  .dark-mode nav {
+    background: rgba(75, 0, 0, 0.7);
+  }
+
+  .dark-mode nav button {
+    background-color: #800000;
+  }
+
+  .page {
+    padding: 30px;
+    animation: fadeIn 1s;
+  }
+
+  /* Serduszka spadające */
+  #hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* nie blokują kliknięć */
+    overflow: hidden;
+    z-index: 0; /* w tle */
+  }
+
+  .heart {
+    position: absolute;
+    color: rgba(255, 0, 100, 0.5);
+    font-size: 20px;
+    animation: fall 6s linear infinite;
+  }
+
+  @keyframes fall {
+    0% {transform: translateY(-10vh);}
+    100% {transform: translateY(110vh);}
+  }
+
+  /* Bijące serduszko w tle */
+  #pulse-heart {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 200px;
+    color: rgba(255, 0, 100, 0.08);
+    z-index: 0;
+    pointer-events: none;
+    animation: heartbeat 2s infinite;
+  }
+
+  /* Fale echa */
+  #pulse-heart::before, #pulse-heart::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border: 2px solid rgba(255, 0, 100, 0.05);
+    border-radius: 50%;
+    animation: pulse-wave 2s infinite ease-out;
+  }
+
+  #pulse-heart::after {
+    animation-delay: 1s;
+  }
+
+  @keyframes heartbeat {
+    0%, 25%, 100% { transform: translate(-50%, -50%) scale(1); }
+    10%, 20% { transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  @keyframes pulse-wave {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  /* Scroll w kształcie serca dla powodów */
+  .heart-scroll-container {
+    width: 400px;
+    height: 500px;
+    margin: auto;
+    padding-right: 20px;
+    overflow-y: scroll;
+    position: relative;
+    font-size: 16px;
+    line-height: 1.6;
+    background: rgba(255, 240, 245, 0.5);
+    border-radius: 10px;
+  }
+
+  .heart-scroll-container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  .heart-scroll-container ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="hearts"></div>
+<div id="pulse-heart">❤️</div>
+
+<!-- Login -->
+<div id="login" class="login-container">
+  <h2>Podaj hasło 💌</h2>
+  <input type="password" id="password" placeholder="DD.MM.RRRR">
+  <button onclick="checkPassword()">Zaloguj</button>
+</div>
+
+<!-- Główna część -->
+<div id="main" class="hidden">
+  <nav>
+    <button onclick="showPage('love')">💞 Cytaty miłosne</button>
+    <button onclick="showPage('comfort')">🌤 Pocieszenie</button>
+    <button onclick="showPage('reasons')">💌 Powody</button>
+    <button onclick="showPage('gallery')">📸 Galeria</button>
+    <button onclick="toggleDarkMode()">🌗 Tryb</button>
+    <button id="musicBtn" onclick="toggleMusic()">🔇</button>
+  </nav>
+
+  <div id="love" class="page">
+    <h2>💖 Cytat miłosny 💖</h2>
+    <p id="loveText"></p>
+  </div>
+
+<div id="comfort" class="page hidden">
+  <h2>🌤 Słowa otuchy 🌤</h2>
+  <p>Niech ten dzień przypomni Ci, że jesteś kochana najbardziej na świecie. 💕<br>
+  Wszystko, co trudne – minie. Zawsze będę przy Tobie, nawet z daleka. 🌙</p>
+  <ul style="list-style:none; padding:0; line-height:1.8; font-size:18px;">
+    <li>🌸 Nawet najciemniejsze dni miną, a ja zawsze będę przy Tobie.</li>
+    <li>🌙 Nie musisz być sama – moje serce jest z Tobą, nawet z daleka.</li>
+    <li>🌹 Twój uśmiech jest moim ulubionym światłem – nigdy o tym nie zapominaj.</li>
+    <li>🌼 Każda łza przybliża nas do piękniejszych chwil.</li>
+    <li>💗 Nawet gdy jesteśmy daleko, trzymam Cię w swoich myślach i sercu.</li>
+    <li>🌻 Nie martw się o jutro – dziś możemy cieszyć się tym, co mamy.</li>
+    <li>🌊 Czasem wystarczy oddech i chwila spokoju, by poczuć, że wszystko będzie dobrze.</li>
+    <li>🌟 Pamiętaj, że jesteś silniejsza niż myślisz.</li>
+    <li>💌 Każdy smutek stanie się wspomnieniem, a nasze wspólne chwile będą jaśniejsze niż kiedykolwiek.</li>
+    <li>🍃 Nie musisz być perfekcyjna – dla mnie jesteś idealna dokładnie taka, jaka jesteś.</li>
+    <li>🌈 Po burzy zawsze wychodzi słońce, a ja będę przy Tobie, by je podziwiać.</li>
+    <li>💖 Gdy czujesz się przygnębiona, pomyśl o mnie – wysyłam Ci całe swoje ciepło.</li>
+    <li>🌷 Wszystkie trudności stają się lżejsze, gdy je dzielimy, nawet na odległość.</li>
+    <li>🌺 Nigdy nie zapominaj, że jesteś kochana, niezależnie od wszystkiego.</li>
+    <li>🌸 Nawet najmniejsze sukcesy zasługują na świętowanie – i ja świętuję je razem z Tobą.</li>
+    <li>🌙 Każdy dzień jest lepszy, bo jesteś w moich myślach.</li>
+    <li>💕 Twój spokój i obecność w moim życiu dają mi radość.</li>
+    <li>🌹 Wszystko, co dzieli nas fizycznie, łączy nas emocjonalnie.</li>
+    <li>🌼 Pamiętaj, że po każdej nocy zawsze wschodzi słońce, a my razem będziemy je widzieć.</li>
+  </ul>
+</div>
+
+<div id="reasons" class="page hidden">
+  <div class="heart-scroll-container">
+    <ul>
+      <li>💘 Twoje piękne oczy, w których widzę cały świat.</li>
+      <li>💘 Twój uśmiech, który rozświetla każdy dzień.</li>
+      <li>💘 Twój charakter – silny, ale pełen czułości.</li>
+      <li>💘 Twój głos, który koi moje serce.</li>
+      <li>💘 Twoja talia – piękna i elegancka.</li>
+      <li>💘 Twoja dłoń w mojej dłoni.</li>
+      <li>💘 Twoje poczucie humoru.</li>
+      <li>💘 Twoja cierpliwość wobec mnie.</li>
+      <li>💘 Twój sposób patrzenia na życie.</li>
+      <li>💘 Twoja wrażliwość.</li>
+      <li>💘 To, jak potrafisz mnie zrozumieć bez słów.</li>
+      <li>💘 Twoja siła w trudnych chwilach.</li>
+      <li>💘 Twój poczucie stylu.</li>
+      <li>💘 Twoje włosy – miękkie i pachnące.</li>
+      <li>💘 Twój sposób śmiania się.</li>
+      <li>💘 Twoja inteligencja.</li>
+      <li>💘 To, jak mnie inspirujesz.</li>
+      <li>💘 Twój delikatny dotyk.</li>
+      <li>💘 Twoja empatia wobec innych.</li>
+      <li>💘 Twoje marzenia, które Cię definiują.</li>
+      <li>💘 Twój urok osobisty.</li>
+      <li>💘 Twoja kreatywność.</li>
+      <li>💘 To, jak mnie motywujesz.</li>
+      <li>💘 Twoja odwaga.</li>
+      <li>💘 Twój styl bycia.</li>
+      <li>💘 Twoje dłonie – piękne i delikatne.</li>
+      <li>💘 Twój zapach.</li>
+      <li>💘 Twoje oczy, gdy się śmiejesz.</li>
+      <li>💘 To, jak troszczysz się o mnie.</li>
+      <li>💘 Twój entuzjazm do życia.</li>
+      <li>💘 Twoja naturalność.</li>
+      <li>💘 Twoja delikatność.</li>
+      <li>💘 Twoja siła wewnętrzna.</li>
+      <li>💘 Twój sposób chodzenia.</li>
+      <li>💘 Twoja spontaniczność.</li>
+      <li>💘 To, jak patrzysz na świat.</li>
+      <li>💘 Twoja determinacja.</li>
+      <li>💘 Twoje ciepło.</li>
+      <li>💘 Twój sposób wyrażania uczuć.</li>
+      <li>💘 Twoja wdzięczność za małe rzeczy.</li>
+      <li>💘 Twój urok, który przyciąga ludzi.</li>
+      <li>💘 Twoja troskliwość.</li>
+      <li>💘 To, jak mnie rozumiesz, nawet gdy milczę.</li>
+      <li>💘 Twój optymizm.</li>
+      <li>💘 Twoja wytrwałość.</li>
+      <li>💘 Twoja delikatna skóra.</li>
+      <li>💘 Twój sposób bycia sobą.</li>
+      <li>💘 Twoja energia, która mnie inspiruje.</li>
+      <li>💘 Twoje spojrzenie pełne miłości.</li>
+      <li>💘 To, jak kochasz życie.</li>
+      <li>💘 Twój talent do słuchania.</li>
+      <li>💘 Twoja radość życia.</li>
+      <li>💘 Twoje ramiona, w których chcę być.</li>
+      <li>💘 Twoja czułość wobec zwierząt.</li>
+      <li>💘 Twój głęboki oddech, gdy jesteśmy blisko.</li>
+      <li>💘 Twoja niezależność.</li>
+      <li>💘 Twój humor w trudnych chwilach.</li>
+      <li>💘 To, jak mnie wspierasz.</li>
+      <li>💘 Twój sposób gotowania.</li>
+      <li>💘 Twoje oczy, kiedy jesteś szczęśliwa.</li>
+      <li>💘 Twoja naturalna elegancja.</li>
+      <li>💘 To, jak przy Tobie czuję się bezpiecznie.</li>
+      <li>💘 Twoja szczerość.</li>
+      <li>💘 Twój zmysł estetyki.</li>
+      <li>💘 Twój urok w każdej sytuacji.</li>
+      <li>💘 Twój sposób świętowania małych rzeczy.</li>
+      <li>💘 Twój zapach w mojej pamięci.</li>
+      <li>💘 Twoje dłonie, gdy mnie obejmują.</li>
+      <li>💘 Twoja cierpliwość wobec życia.</li>
+      <li>💘 Twój sposób myślenia.</li>
+      <li>💘 Twoja wierność wartościom.</li>
+      <li>💘 Twój entuzjazm do nowych doświadczeń.</li>
+      <li>💘 Twoja szczodrość wobec innych.</li>
+      <li>💘 Twoja wrażliwość na piękno.</li>
+      <li>💘 To, jak się śmiejesz.</li>
+      <li>💘 Twoja wyobraźnia.</li>
+      <li>💘 Twoje spojrzenie pełne ciepła.</li>
+      <li>💘 Twój sposób patrzenia na mnie.</li>
+      <li>💘 Twoja obecność sprawia, że świat staje się lepszy.</li>
+      <li>💘 Twój głos w chwilach spokoju.</li>
+      <li>💘 To, jak się starasz dla mnie.</li>
+      <li>💘 Twój styl komunikacji.</li>
+      <li>💘 Twoja serdeczność wobec ludzi.</li>
+      <li>💘 Twoja pewność siebie.</li>
+      <li>💘 Twój uśmiech w deszczowe dni.</li>
+      <li>💘 To, jak pamiętasz ważne szczegóły.</li>
+      <li>💘 Twój spokój w chaosie.</li>
+      <li>💘 Twoja szczerość wobec siebie.</li>
+      <li>💘 Twój sposób rozwiązywania problemów.</li>
+      <li>💘 To, jak mnie inspirujesz do bycia lepszym.</li>
+      <li>💘 Twój optymizm w każdej sytuacji.</li>
+      <li>💘 Twój sposób trzymania mnie za rękę.</li>
+      <li>💘 Twoje spojrzenie pełne troski.</li>
+      <li>💘 To, jak potrafisz być zabawna i poważna jednocześnie.</li>
+      <li>💘 Twój zapach w moich wspomnieniach.</li>
+      <li>💘 Twoja umiejętność słuchania.</li>
+      <li>💘 Twój śmiech, który zawsze mnie rozśmiesza.</li>
+      <li>💘 To, że jesteś sobą i to kocham najbardziej.</li>
+      <li>💘 Bo każdego dnia pokazujesz mi, czym jest prawdziwa miłość.</li>
+    </ul>
+  </div>
+</div>
+
+  <div id="gallery" class="page hidden">
+    <h2>📸 Nasze wspomnienia i moje zdjęcia 📸</h2>
+    <img src="1.jpg" style="width: 200px; border-radius: 10px;">
+    <img src="2.jpg" style="width: 200px; border-radius: 10px;">
+    <img src="3.jpg" style="width: 200px; border-radius: 10px;">
+    <img src="4.jpg" style="width: 200px; border-radius: 10px;">
+    <img src="5.jpg" style="width: 200px; border-radius: 10px;">
+    <img src="6.jpg" style="width: 200px; border-radius: 10px;">
+  </div>
+</div>
+
+<!-- Muzyka -->
+<audio id="bgMusic" loop>
+  <source src="love-song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const password = "29.08.2025";
+
+function checkPassword() {
+  const input = document.getElementById('password').value.trim();
+  if (input === password) {
+    const login = document.getElementById('login');
+    login.style.animation = "fadeOut 0.8s";
+    setTimeout(() => {
+      login.remove();
+      document.getElementById('main').classList.remove('hidden');
+      showRandomLoveText();
+      playMusic();
+    }, 700);
+  } else {
+    alert("Niepoprawne hasło 💔");
+  }
+}
+
+function playMusic() {
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicBtn');
+  music.play().catch(() => {
+    console.log("Autoplay zablokowany – kliknij przycisk muzyki 🎵");
+  });
+  btn.textContent = "🎵";
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if (id === 'love') showRandomLoveText();
+}
+
+const loveTexts = [
+  "Kocham Cię bardziej, niż słowa potrafią wyrazić 💞",
+  "Ty jesteś moim sercem, moim światem, moim wszystkim 💖",
+  "Z Tobą każdy dzień jest piękniejszy 🌸",
+  "Gdy myślę o miłości, widzę Ciebie ❤️",
+  "Jesteś moim najpiękniejszym snem 🌙",
+  "Nawet tysiące kilometrów nie oddzielą naszych serc 💌",
+  "Każdy Twój uśmiech to iskierka w moim sercu 🔥",
+  "Nie potrzebuję niczego więcej, tylko Ciebie 💋",
+  "Twoje imię brzmi jak dom 🏡",
+  "Z Tobą – zawsze i wszędzie 💍",
+  "Twój dotyk sprawia, że świat staje się lepszy 💗",
+  "Twój uśmiech rozświetla moje życie 🌟",
+  "Każda chwila z Tobą jest bezcenna ✨",
+  "Myśl o Tobie ogrzewa moje serce 🔥",
+  "Twoja obecność sprawia, że wszystko jest łatwiejsze 🌸",
+  "Czekam na Ciebie nawet w najciemniejsze dni 🌙",
+  "Twój głos to melodia, której chcę słuchać zawsze 🎶",
+  "Kiedy patrzę w Twoje oczy, widzę cały świat 🌍",
+  "Twoja miłość daje mi siłę do wszystkiego 💪",
+  "Każde Twoje słowo zostaje w moim sercu 💖",
+  "Kocham Cię za wszystko, czym jesteś 💘",
+  "Jesteś moim spokojem i moją radością 🌷",
+  "Każdy dzień zaczyna się piękniej dzięki Tobie 🌞",
+  "Twój urok sprawia, że świat staje się kolorowy 🌈",
+  "Dziękuję losowi, że Cię spotkałem 🙏",
+  "Twoje marzenia są dla mnie równie ważne, jak moje 💭",
+  "Twój śmiech to mój ulubiony dźwięk 😂",
+  "Z Tobą chcę dzielić każdy moment życia ⏳",
+  "Nawet cisza z Tobą jest pełna szczęścia 🤍",
+  "Kocham Twoją dobroć i wrażliwość 🌹",
+  "Jesteś moją inspiracją i moim światłem 💫",
+  "Każdy Twój gest sprawia, że czuję się wyjątkowo 💕",
+  "Nie ma nic piękniejszego niż Twoja obecność 🌸",
+  "Twoje oczy mówią więcej niż tysiąc słów 👀",
+  "Każde Twoje spojrzenie przypomina mi, jak bardzo Cię kocham ❤️",
+  "Twój uśmiech to mój codzienny skarb 💎",
+  "Każdy dzień z Tobą jest darem, którego nigdy nie zapomnę 🎁",
+  "Twoja miłość jest moją największą radością 💖",
+  "Chcę być przy Tobie w każdej chwili 🌷",
+  "Każde Twoje słowo zostaje w mojej pamięci na zawsze 📝",
+  "Kocham Cię w sposób, którego nie da się opisać słowami 💘",
+  "Jesteś moim światłem w każdej ciemności 🌟",
+  "Moje serce bije tylko dla Ciebie 💓",
+  "Chcę spędzić z Tobą wszystkie moje dni 🕊",
+  "Każde Twoje spojrzenie przypomina mi, co jest naprawdę ważne 💖",
+  "Kocham Cię za Twój uśmiech, Twój głos i Twój dotyk 💗",
+  "Jesteś moim wszystkim i na zawsze tak zostanie 💞",
+  "Nie ma nic piękniejszego niż Twoja obecność obok mnie 🌹",
+  "Z Tobą wszystko staje się możliwe 🌈",
+  "Dziękuję Ci, że jesteś częścią mojego życia 💌",
+  "Twój śmiech rozjaśnia każdy mój dzień 🌞",
+  "Twoja miłość jest dla mnie schronieniem 💖",
+  "Każdy dzień staje się lepszy dzięki Tobie 💕",
+  "Jesteś moją nadzieją i moją radością 🌷",
+  "Twoje spojrzenie rozumie mnie bez słów 👀",
+  "Kocham sposób, w jaki sprawiasz, że świat jest piękniejszy ✨",
+  "Twoja obecność w moim życiu jest bezcenna 💓"
+];
+
+
+function showRandomLoveText() {
+  const randomIndex = Math.floor(Math.random() * loveTexts.length);
+  document.getElementById('loveText').innerText = loveTexts[randomIndex];
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
+
+function toggleMusic() {
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicBtn');
+  if (music.paused) {
+    music.play();
+    btn.textContent = "🎵";
+  } else {
+    music.pause();
+    btn.textContent = "🔇";
+  }
+}
+
+// Efekt spadających serduszek
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.innerText = '❤️';
+  heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+  document.getElementById('hearts').appendChild(heart);
+  setTimeout(() => heart.remove(), 7000);
+}
+setInterval(createHeart, 400);
+</script>
+
+</body>
+</html>
